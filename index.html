@@ -1,0 +1,437 @@
+
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#080914">
+<title>PePerouny | NEO QR Studio</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<style>
+:root{
+  color-scheme:dark;
+  --bg:#080914;
+  --panel:rgba(19,21,42,.82);
+  --line:rgba(255,255,255,.09);
+  --purple:#a78bfa;
+  --violet:#7c3aed;
+  --cyan:#67e8f9;
+  --text:#f4f2ff;
+  --muted:#9294b4;
+  --green:#6ee7b7;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  margin:0;min-height:100vh;padding:34px 18px 55px;
+  font-family:Vazirmatn,Tahoma,sans-serif;color:var(--text);
+  background:
+    radial-gradient(ellipse at 50% -10%,#5436a63b,transparent 48%),
+    radial-gradient(ellipse at 100% 60%,#06b6d419,transparent 34%),
+    var(--bg);
+}
+body:before{
+  content:"";position:fixed;inset:0;pointer-events:none;
+  background-image:linear-gradient(#ffffff06 1px,transparent 1px),
+  linear-gradient(90deg,#ffffff06 1px,transparent 1px);
+  background-size:34px 34px;
+  mask-image:linear-gradient(#000,transparent 85%);
+}
+button,input,textarea,select{font:inherit}
+button{cursor:pointer}
+button:focus-visible,input:focus-visible,textarea:focus-visible,select:focus-visible{
+  outline:2px solid var(--cyan);outline-offset:3px
+}
+.app{position:relative;width:min(100%,680px);margin:auto}
+.topbar{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:36px}
+.brand{display:flex;align-items:center;gap:12px}
+.brand-icon{
+  display:grid;place-items:center;width:48px;height:48px;border-radius:15px;
+  background:linear-gradient(140deg,#8b5cf6,#4338ca);
+  box-shadow:0 0 30px #8b5cf642;font-size:25px
+}
+.brand-name{font-weight:900;letter-spacing:.2px}
+.brand-sub{font-size:11px;color:var(--muted);direction:ltr;text-align:right}
+.pill{
+  display:flex;align-items:center;gap:7px;padding:8px 12px;
+  border:1px solid #34d39936;border-radius:30px;
+  color:var(--green);font-size:11px;background:#34d3990b
+}
+.dot{width:7px;height:7px;background:var(--green);border-radius:50%;box-shadow:0 0 10px var(--green)}
+.hero{text-align:center;margin-bottom:28px}
+.eyebrow{
+  display:inline-flex;gap:8px;align-items:center;color:var(--cyan);
+  font-size:11px;letter-spacing:2px;font-weight:800;
+  border:1px solid #67e8f925;background:#67e8f909;
+  padding:6px 12px;border-radius:30px
+}
+h1{
+  font-size:clamp(34px,8vw,57px);line-height:1.3;letter-spacing:-1.8px;
+  margin:17px 0 9px;font-weight:900
+}
+.gradient{
+  color:transparent;background:linear-gradient(100deg,#fff 5%,#c4b5fd 45%,#67e8f9 95%);
+  background-clip:text;-webkit-background-clip:text
+}
+.hero p{font-size:13px;color:var(--muted);margin:0;line-height:2}
+.layout{display:grid;grid-template-columns:1fr;gap:16px}
+.panel{
+  background:linear-gradient(145deg,rgba(26,28,54,.92),rgba(14,16,33,.95));
+  border:1px solid var(--line);border-radius:23px;padding:23px;
+  box-shadow:0 22px 65px #00000026,inset 0 1px #ffffff07;
+  backdrop-filter:blur(18px);
+  animation:enter .55s ease both
+}
+.panel-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:19px}
+.panel-title{font-size:15px;font-weight:800;display:flex;align-items:center;gap:9px}
+.step{font-size:10px;color:var(--purple);background:#a78bfa12;border:1px solid #a78bfa25;padding:4px 9px;border-radius:8px}
+.field{margin-bottom:18px}
+.label-row{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:9px}
+label{font-size:12px;color:#deddf5;font-weight:700}
+.hint,.counter{font-size:10px;color:var(--muted)}
+textarea,select{
+  width:100%;color:var(--text);background:#090b19;
+  border:1px solid #ffffff12;border-radius:13px;transition:.2s
+}
+textarea{min-height:116px;padding:14px;resize:vertical;line-height:1.9;font-size:13px}
+textarea::placeholder{color:#696b8b}
+textarea:focus,select:focus{border-color:#a78bfa80;outline:none;box-shadow:0 0 0 3px #8b5cf61a}
+select{height:45px;padding:0 12px;cursor:pointer;font-size:12px}
+select option{background:#15172b}
+.colors{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.color-box{background:#0b0d1d;border:1px solid #ffffff12;border-radius:13px;padding:10px}
+.color-box label{display:block;margin-bottom:8px;font-size:11px}
+.color-control{display:flex;align-items:center;gap:9px}
+input[type=color]{width:34px;height:32px;padding:3px;border:1px solid #ffffff18;border-radius:8px;background:#17192c;cursor:pointer}
+.hex{font-size:11px;color:#c8c7e4;direction:ltr}
+.presets{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+.swatch{width:27px;height:27px;padding:0;border-radius:9px;border:2px solid #ffffff20;transition:.2s}
+.swatch:hover{transform:scale(1.12)}
+.primary,.secondary,.download,.copy{
+  width:100%;min-height:47px;border-radius:12px;font-weight:800;
+  font-size:12px;transition:transform .2s,filter .2s,box-shadow .2s
+}
+.primary{
+  color:#fff;border:1px solid #a78bfa30;
+  background:linear-gradient(105deg,#7c3aed,#6366f1);
+  box-shadow:0 8px 26px #7c3aed2d
+}
+.primary:hover{filter:brightness(1.16);transform:translateY(-2px);box-shadow:0 12px 30px #7c3aed40}
+.actions{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:10px}
+.secondary,.copy{background:#ffffff06;color:#d6d5ec;border:1px solid var(--line)}
+.secondary:hover,.copy:hover{background:#ffffff0d}
+button:active{transform:scale(.985)}
+.result{display:none}
+.result.visible{display:block;animation:enter .4s ease both}
+.preview{
+  display:flex;justify-content:center;align-items:center;
+  min-height:230px;padding:20px;background:
+  radial-gradient(ellipse,#a78bfa0b,transparent 70%),#0b0d1a;
+  border:1px dashed #a78bfa36;border-radius:17px;overflow:auto
+}
+#qrOutput{
+  display:flex;align-items:center;justify-content:center;
+  max-width:100%;padding:12px;background:#fff;border-radius:8px;
+  box-shadow:0 0 35px #a78bfa13
+}
+#qrOutput canvas,#qrOutput img{display:block;max-width:100%;height:auto}
+.result-heading{text-align:center;margin:0 0 15px;font-size:14px;font-weight:800}
+.result-heading small{display:block;color:var(--muted);font-size:10px;font-weight:400;margin-top:5px}
+.result-meta{display:flex;justify-content:space-between;gap:8px;margin:13px 0 17px;font-size:10px;color:var(--muted)}
+.download{color:#052e2b;background:linear-gradient(105deg,#6ee7b7,#67e8f9);border:0}
+.download:hover{filter:brightness(1.08);box-shadow:0 8px 25px #67e8f926}
+.copy{margin-top:9px}
+.status{font-size:11px;color:var(--muted);text-align:center;margin:14px 0 0;overflow-wrap:anywhere}
+.status:empty{display:none}
+.status.error{color:#fda4af}
+.status.success{color:var(--green)}
+.features{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:16px}
+.feature{
+  text-align:center;padding:15px 8px;border:1px solid var(--line);
+  border-radius:14px;background:#ffffff03
+}
+.feature b{display:block;font-size:12px;margin-bottom:4px}
+.feature span{font-size:10px;color:var(--muted)}
+.footer{text-align:center;margin-top:29px;color:#727493;font-size:10px}
+.footer strong{color:#b5a2ff}
+@keyframes enter{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+@media(min-width:640px){.panel{padding:28px}.hero{margin-bottom:33px}}
+@media(max-width:400px){
+ body{padding:23px 12px 35px}
+ .panel{padding:18px}
+ .brand-icon{width:42px;height:42px}
+ .pill{font-size:10px;padding:7px 9px}
+ .features{gap:6px}
+ .feature{padding:12px 5px}
+}
+@media(prefers-reduced-motion:reduce){
+ *,*:before,*:after{animation:none!important;transition:none!important;scroll-behavior:auto!important}
+}
+
+</style>
+</head>
+<body>
+<main class="app">
+  <header class="topbar">
+    <div class="brand">
+      <div class="brand-icon" aria-hidden="true">⌘</div>
+      <div>
+        <div class="brand-name">PePerouny <span style="color:#a78bfa">Studio</span></div>
+        <div class="brand-sub">NEO EDITION · QR LAB</div>
+      </div>
+    </div>
+    <div class="pill"><span class="dot"></span> آماده ساخت</div>
+  </header>
+
+  <section class="hero">
+    <span class="eyebrow">✦ NEXT LEVEL GENERATOR</span>
+    <h1><span class="gradient">QR Code</span><br>با استایل خودت</h1>
+    <p>لینک یا متن خودت رو وارد کن؛<br>رنگ‌ها رو انتخاب کن و QR اختصاصی بساز.</p>
+  </section>
+
+  <div class="layout">
+    <section class="panel">
+      <div class="panel-head">
+        <div class="panel-title"><span>✳</span> تنظیمات طراحی</div>
+        <span class="step">STEP 01</span>
+      </div>
+
+      <form id="qrForm">
+        <div class="field">
+          <div class="label-row">
+            <label for="qrText">متن یا لینک مقصد</label>
+            <span id="counter" class="counter">۰ کاراکتر</span>
+          </div>
+          <textarea id="qrText" maxlength="2500" placeholder="https://example.com&#10;یا هر متن دلخواه..." required></textarea>
+        </div>
+
+        <div class="field">
+          <div class="label-row">
+            <label for="qrSize">ابعاد خروجی</label>
+            <span class="hint">PIXEL</span>
+          </div>
+          <select id="qrSize">
+            <option value="128">128 × 128 · کوچک</option>
+            <option value="200" selected>200 × 200 · استاندارد</option>
+            <option value="256">256 × 256 · باکیفیت</option>
+            <option value="320">320 × 320 · بزرگ</option>
+            <option value="512">512 × 512 · HD</option>
+          </select>
+        </div>
+
+        <div class="field">
+          <div class="label-row"><label>پالت رنگی</label><span class="hint">CUSTOM COLORS</span></div>
+          <div class="colors">
+            <div class="color-box">
+              <label for="qrColor">رنگ کد</label>
+              <div class="color-control">
+                <input type="color" id="qrColor" value="#17132f">
+                <span id="qrHex" class="hex">#17132F</span>
+              </div>
+            </div>
+            <div class="color-box">
+              <label for="bgColor">رنگ زمینه</label>
+              <div class="color-control">
+                <input type="color" id="bgColor" value="#ffffff">
+                <span id="bgHex" class="hex">#FFFFFF</span>
+              </div>
+            </div>
+          </div>
+          <div class="presets" aria-label="ترکیب رنگ آماده">
+            <button class="swatch" type="button" data-dark="#17132f" data-light="#ffffff" style="background:linear-gradient(135deg,#17132f 50%,#fff 50%)" aria-label="بنفش کلاسیک"></button>
+            <button class="swatch" type="button" data-dark="#0891b2" data-light="#ecfeff" style="background:linear-gradient(135deg,#0891b2 50%,#ecfeff 50%)" aria-label="فیروزه‌ای"></button>
+            <button class="swatch" type="button" data-dark="#166534" data-light="#f0fdf4" style="background:linear-gradient(135deg,#166534 50%,#f0fdf4 50%)" aria-label="سبز"></button>
+            <button class="swatch" type="button" data-dark="#be123c" data-light="#fff1f2" style="background:linear-gradient(135deg,#be123c 50%,#fff1f2 50%)" aria-label="قرمز"></button>
+            <button class="swatch" type="button" data-dark="#111827" data-light="#fef3c7" style="background:linear-gradient(135deg,#111827 50%,#fef3c7 50%)" aria-label="مشکی و طلایی"></button>
+            <button class="swatch" type="button" data-dark="#ffffff" data-light="#18152d" style="background:linear-gradient(135deg,#fff 50%,#18152d 50%)" aria-label="معکوس"></button>
+          </div>
+        </div>
+
+        <button class="primary" id="generateBtn" type="submit">✦ ساخت QR اختصاصی</button>
+        <div class="actions">
+          <button class="secondary" id="clearBtn" type="button">↺ پاک کردن</button>
+          <button class="secondary" id="sampleBtn" type="button">✧ متن نمونه</button>
+        </div>
+      </form>
+      <p id="status" class="status" role="status" aria-live="polite"></p>
+    </section>
+
+    <section class="panel result" id="result" aria-label="پیش‌نمایش QR">
+      <div class="panel-head">
+        <div class="panel-title">◈ پیش‌نمایش خروجی</div>
+        <span class="step">STEP 02</span>
+      </div>
+      <h2 class="result-heading">کد اختصاصی تو آماده‌ست
+        <small>برای اسکن، دوربین موبایل رو مقابل کد بگیر.</small>
+      </h2>
+      <div class="preview">
+        <div id="qrOutput"></div>
+      </div>
+      <div class="result-meta">
+        <span id="sizeInfo">200 × 200 px</span>
+        <span>PNG · QR CODE</span>
+      </div>
+      <button class="download" id="downloadBtn" type="button">↓ دانلود تصویر PNG</button>
+      <button class="copy" id="copyBtn" type="button">⧉ کپی متن ورودی</button>
+    </section>
+  </div>
+
+  <section class="features" aria-label="امکانات">
+    <div class="feature"><b>⚡ سریع</b><span>ساخت در چند لحظه</span></div>
+    <div class="feature"><b>◈ شخصی‌سازی</b><span>رنگ و اندازه دلخواه</span></div>
+    <div class="feature"><b>↗ قابل دانلود</b><span>خروجی PNG</span></div>
+  </section>
+
+  <footer class="footer">CRAFTED FOR <strong>@peperouny_chanel</strong> · NEO QR STUDIO</footer>
+</main>
+
+<script>
+const $ = id => document.getElementById(id);
+const form = $("qrForm");
+const textInput = $("qrText");
+const sizeInput = $("qrSize");
+const colorInput = $("qrColor");
+const bgInput = $("bgColor");
+const output = $("qrOutput");
+const result = $("result");
+const statusBox = $("status");
+let lastText = "";
+let lastSize = 200;
+
+function setStatus(message, type = "") {
+  statusBox.textContent = message;
+  statusBox.className = "status " + type;
+}
+function updateColors() {
+  $("qrHex").textContent = colorInput.value.toUpperCase();
+  $("bgHex").textContent = bgInput.value.toUpperCase();
+}
+function updateCounter() {
+  $("counter").textContent =
+    textInput.value.length.toLocaleString("fa-IR") + " کاراکتر";
+}
+colorInput.addEventListener("input", updateColors);
+bgInput.addEventListener("input", updateColors);
+textInput.addEventListener("input", updateCounter);
+
+document.querySelectorAll(".swatch").forEach(button => {
+  button.addEventListener("click", () => {
+    colorInput.value = button.dataset.dark;
+    bgInput.value = button.dataset.light;
+    updateColors();
+    if (lastText) generateQR(lastText);
+  });
+});
+
+function generateQR(value) {
+  if (typeof QRCode === "undefined") {
+    setStatus("کتابخانه QR بارگذاری نشده؛ اتصال اینترنت رو بررسی کن.", "error");
+    return false;
+  }
+
+  const size = Number(sizeInput.value);
+  output.replaceChildren();
+  result.classList.remove("visible");
+
+  try {
+    new QRCode(output, {
+      text: value,
+      width: size,
+      height: size,
+      colorDark: colorInput.value,
+      colorLight: bgInput.value,
+      correctLevel: QRCode.CorrectLevel.M
+    });
+
+    lastText = value;
+    lastSize = size;
+    $("sizeInfo").textContent = size + " × " + size + " px";
+    result.classList.add("visible");
+    setStatus("کد QR با موفقیت ساخته شد ✦", "success");
+
+    result.scrollIntoView({ behavior: "smooth", block: "nearest" });
+    return true;
+  } catch (error) {
+    output.replaceChildren();
+    setStatus("ساخت QR انجام نشد؛ متن کوتاه‌تری امتحان کن.", "error");
+    return false;
+  }
+}
+
+form.addEventListener("submit", event => {
+  event.preventDefault();
+  const value = textInput.value.trim();
+
+  if (!value) {
+    setStatus("اول متن یا لینک رو وارد کن.", "error");
+    textInput.focus();
+    return;
+  }
+  generateQR(value);
+});
+
+sizeInput.addEventListener("change", () => {
+  if (lastText) generateQR(lastText);
+});
+
+$("sampleBtn").addEventListener("click", () => {
+  textInput.value = "https://example.com";
+  updateCounter();
+  textInput.focus();
+  setStatus("متن نمونه وارد شد؛ حالا QR بساز.", "");
+});
+
+$("clearBtn").addEventListener("click", () => {
+  form.reset();
+  output.replaceChildren();
+  result.classList.remove("visible");
+  lastText = "";
+  updateCounter();
+  updateColors();
+  setStatus("همه‌چیز پاک شد. آماده شروع دوباره‌ای!");
+  textInput.focus();
+});
+
+$("downloadBtn").addEventListener("click", () => {
+  const canvas = output.querySelector("canvas");
+  const img = output.querySelector("img");
+  let url;
+
+  if (canvas) {
+    url = canvas.toDataURL("image/png");
+  } else if (img && img.src) {
+    url = img.src;
+  } else {
+    setStatus("تصویر هنوز آماده نیست؛ دوباره امتحان کن.", "error");
+    return;
+  }
+
+  const link = document.createElement("a");
+  link.href = url;
+  link.download = "PePerouny-QR-" + lastSize + ".png";
+  document.body.appendChild(link);
+  link.click();
+  link.remove();
+  setStatus("دانلود تصویر شروع شد.", "success");
+});
+
+$("copyBtn").addEventListener("click", async () => {
+  if (!lastText) return;
+  try {
+    await navigator.clipboard.writeText(lastText);
+    setStatus("متن ورودی کپی شد ✓", "success");
+  } catch {
+    textInput.focus();
+    textInput.select();
+    setStatus("متن انتخاب شد؛ برای کپی از Ctrl+C استفاده کن.");
+  }
+});
+
+updateColors();
+updateCounter();
+</script>
+</body>
+</html>
